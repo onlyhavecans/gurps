@@ -7,6 +7,11 @@ static GRUPS_ROLL: &str = "3d6";
 fn roll_me(s: &str) -> i32 {
     let r = d20::roll_dice(s).unwrap();
     //println!("Roll: {}", r);
+    match r.total {
+        17...18 => println!("Crit Fail!"),
+        1...2 => println!("Crit Success!"),
+        _ => {},
+    };
     r.total
 }
 
@@ -34,18 +39,7 @@ fn quick_roll(){
     println!("Rolled a {}", r);
 }
 
-fn roll_against(i: std::str::SplitWhitespace){
-    let mut mi = i;
-    let s = match mi.next() {
-        Some(s) => s,
-        _ => "10"
-    };
-
-    let n: i32 = match s.parse::<i32>() {
-        Ok(n) => n,
-        Err(_) => 0,
-    };
-
+fn roll_against(n: i32){
     if n == 0 || n > 18 {
         println!("Rolling against {} is an error", n);
         return
@@ -53,8 +47,7 @@ fn roll_against(i: std::str::SplitWhitespace){
 
     let r: i32 = roll_me(GRUPS_ROLL);
     let win: bool = match r.cmp(&n) {
-        Ordering::Less => true,
-        Ordering::Equal => true,
+        Ordering::Less | Ordering::Equal => true,
         Ordering::Greater => false
     };
 
@@ -69,7 +62,8 @@ fn roll_against(i: std::str::SplitWhitespace){
 }
 
 fn main() {
-    println!("Welcome to the roller. q to quit");
+    println!("Welcome to the roller;");
+    println!("q to quit, h to help");
     loop {
         let input = get_input();
         let mut iter = input.split_whitespace();
@@ -77,7 +71,23 @@ fn main() {
             Some("q") => break,
             Some("h") => help_me(),
             Some("r") => quick_roll(),
-            Some("ra") => roll_against(iter),
+            Some("ra") => {
+                let s = match iter.next() {
+                    Some(s) => s,
+                    _ => {
+                        println!("ra requires a #");
+                        continue
+                    },
+                };
+                let n: i32 = match s.parse::<i32>() {
+                    Ok(n) => n,
+                    Err(_) => {
+                        println!("ra requires a #");
+                        continue
+                    },
+                };
+                roll_against(n);
+            },
             _ => continue,
         };
     }
