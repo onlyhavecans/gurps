@@ -4,6 +4,13 @@ use std::cmp::Ordering;
 
 static GRUPS_ROLL: &str = "3d6";
 
+fn help_me() {
+    println!("h = help");
+    println!("q = quit");
+    println!("r = quick roll");
+    println!("ra # = quick roll");
+}
+
 fn roll_me(s: &str) -> i32 {
     let r = d20::roll_dice(s).unwrap();
     //println!("Roll: {}", r);
@@ -15,17 +22,6 @@ fn roll_me(s: &str) -> i32 {
     r.total
 }
 
-fn get_input() -> String {
-    let mut i = String::new();
-    io::stdin().read_line(&mut i).expect("!!Failed to read line");
-
-    let input: String = match i.trim().parse() {
-        Ok(l) => l,
-        Err(_) => String::new(),
-    };
-    input
-}
-
 fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
     let mut iter = i;
     if let Some(s) = iter.next() {
@@ -35,13 +31,6 @@ fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
     };
     println!("!! A number was expected next");
     Err("Next was not exist or a number")
-}
-
-fn help_me() {
-    println!("h = help");
-    println!("q = quit");
-    println!("r = quick roll");
-    println!("ra # = quick roll");
 }
 
 fn quick_roll() {
@@ -69,8 +58,11 @@ fn main() {
     println!("Welcome to the roller;");
     println!("q to quit, h to help");
     loop {
-        let input = get_input();
-        let mut iter = input.split_whitespace();
+        let mut input = String::new();
+        io::stdin().read_line(&mut input)
+            .expect("!!Failed to read line");
+        let mut iter = input.trim()
+            .split_whitespace();
         match iter.next() {
             Some("q") => break,
             Some("h") => help_me(),
