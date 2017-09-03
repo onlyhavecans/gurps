@@ -19,11 +19,11 @@ fn get_input() -> String {
     let mut i = String::new();
     io::stdin().read_line(&mut i).expect("Failed to read line");
 
-    let i: String = match i.trim().parse() {
+    let input: String = match i.trim().parse() {
         Ok(l) => l,
         Err(_) => String::new(),
     };
-    i
+    input
 }
 
 fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
@@ -45,23 +45,22 @@ fn help_me() {
 }
 
 fn quick_roll() {
-    let r = roll_me(GRUPS_ROLL);
-    println!("Rolled a {}", r);
+    let roll = roll_me(GRUPS_ROLL);
+    println!("Rolled a {}", roll);
 }
 
-fn roll_against(n: i32) {
-    if n == 0 || n > 18 {
-        println!("Rolling against {} is an error", n);
+fn roll_against(against: i32) {
+    if against == 0 || against > 18 {
+        println!("Rolling against {} is an error", against);
         return;
     };
-
-    let r: i32 = roll_me(GRUPS_ROLL);
-    match r.cmp(&n) {
+    let roll: i32 = roll_me(GRUPS_ROLL);
+    match roll.cmp(&against) {
         Ordering::Less | Ordering::Equal => {
-            println!("Success! delta {}", n - r);
+            println!("Success! delta {}", against - roll);
         }
         Ordering::Greater => {
-            println!("Failure! delta {}", r - n);
+            println!("Failure! delta {}", roll - against);
         }
     };
 }
