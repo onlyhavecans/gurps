@@ -22,6 +22,12 @@ fn roll_me(s: &str) -> i32 {
     r.total
 }
 
+fn get_input() -> String {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).expect("!!Failed to read line");
+    String::from(input)
+}
+
 fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
     let mut iter = i;
     if let Some(s) = iter.next() {
@@ -58,11 +64,8 @@ fn main() {
     println!("Welcome to the roller;");
     println!("q to quit, h to help");
     loop {
-        let mut input = String::new();
-        io::stdin().read_line(&mut input)
-            .expect("!!Failed to read line");
-        let mut iter = input.trim()
-            .split_whitespace();
+        let input = get_input();
+        let mut iter = input.split_whitespace();
         match iter.next() {
             Some("q") => break,
             Some("h") => help_me(),
