@@ -76,10 +76,6 @@ fn main() {
         match iter.next() {
             Some("q") => break,
             Some("h") => help_me(),
-
-
-
-
             Some("r") => quick_roll(),
             Some("ra") => roll_against(iter),
             _ => continue,
