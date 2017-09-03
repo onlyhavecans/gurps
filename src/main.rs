@@ -17,7 +17,7 @@ fn roll_me(s: &str) -> i32 {
 
 fn get_input() -> String {
     let mut i = String::new();
-    io::stdin().read_line(&mut i).expect("Failed to read line");
+    io::stdin().read_line(&mut i).expect("!!Failed to read line");
 
     let input: String = match i.trim().parse() {
         Ok(l) => l,
@@ -33,7 +33,7 @@ fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
             return Ok(n);
         }
     };
-    println!("A number was expected next");
+    println!("!! A number was expected next");
     Err("Next was not exist or a number")
 }
 
@@ -51,7 +51,7 @@ fn quick_roll() {
 
 fn roll_against(against: i32) {
     if against == 0 || against > 18 {
-        println!("Rolling against {} is an error", against);
+        println!("!! Rolling against {} is an error", against);
         return;
     };
     let roll: i32 = roll_me(GRUPS_ROLL);
