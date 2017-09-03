@@ -27,6 +27,17 @@ fn get_input() -> String {
     return i
 }
 
+fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
+    let mut iter = i;
+    if let Some(s) = iter.next() {
+        if let Ok(n) = s.parse::<i32>() {
+            return Ok(n)
+        }
+    };
+    println!("A number was expected next");
+    return Err("Next was not exist or a number")
+}
+
 fn help_me() {
     println!("h = help");
     println!("q = quit");
@@ -72,21 +83,9 @@ fn main() {
             Some("h") => help_me(),
             Some("r") => quick_roll(),
             Some("ra") => {
-                let s = match iter.next() {
-                    Some(s) => s,
-                    _ => {
-                        println!("ra requires a #");
-                        continue
-                    },
-                };
-                let n: i32 = match s.parse::<i32>() {
-                    Ok(n) => n,
-                    Err(_) => {
-                        println!("ra requires a #");
-                        continue
-                    },
-                };
-                roll_against(n);
+                if let Ok(n) = is_next_number(iter) {
+                    roll_against(n);
+                }
             },
             _ => continue,
         };
