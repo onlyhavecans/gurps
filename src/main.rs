@@ -10,32 +10,31 @@ fn roll_me(s: &str) -> i32 {
     match r.total {
         17...18 => println!("Crit Fail!"),
         1...2 => println!("Crit Success!"),
-        _ => {},
+        _ => {}
     };
     r.total
 }
 
 fn get_input() -> String {
     let mut i = String::new();
-    io::stdin().read_line(&mut i)
-        .expect("Failed to read line");
+    io::stdin().read_line(&mut i).expect("Failed to read line");
 
     let i: String = match i.trim().parse() {
         Ok(l) => l,
         Err(_) => String::new(),
     };
-    return i
+    i
 }
 
 fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
     let mut iter = i;
     if let Some(s) = iter.next() {
         if let Ok(n) = s.parse::<i32>() {
-            return Ok(n)
+            return Ok(n);
         }
     };
     println!("A number was expected next");
-    return Err("Next was not exist or a number")
+    Err("Next was not exist or a number")
 }
 
 fn help_me() {
@@ -45,31 +44,26 @@ fn help_me() {
     println!("ra # = quick roll");
 }
 
-fn quick_roll(){
+fn quick_roll() {
     let r = roll_me(GRUPS_ROLL);
     println!("Rolled a {}", r);
 }
 
-fn roll_against(n: i32){
+fn roll_against(n: i32) {
     if n == 0 || n > 18 {
         println!("Rolling against {} is an error", n);
-        return
+        return;
     };
 
     let r: i32 = roll_me(GRUPS_ROLL);
-    let win: bool = match r.cmp(&n) {
-        Ordering::Less | Ordering::Equal => true,
-        Ordering::Greater => false
+    match r.cmp(&n) {
+        Ordering::Less | Ordering::Equal => {
+            println!("Success! delta {}", n - r);
+        }
+        Ordering::Greater => {
+            println!("Failure! delta {}", r - n);
+        }
     };
-
-    let delta: i32 = if win {
-        print!("Success!");
-        n - r
-    } else {
-        print!("Failure!");
-        r - n
-    };
-    println!(" delta {}", delta);
 }
 
 fn main() {
@@ -86,7 +80,7 @@ fn main() {
                 if let Ok(n) = is_next_number(iter) {
                     roll_against(n);
                 }
-            },
+            }
             _ => continue,
         };
     }
