@@ -6,7 +6,7 @@ static GRUPS_ROLL: &str = "3d6";
 
 fn roll_me(s: &str) -> i32 {
     let r = d20::roll_dice(s).unwrap();
-    println!("Roll: {}", r);
+    //println!("Roll: {}", r);
     r.total
 }
 
@@ -19,8 +19,7 @@ fn get_input() -> String {
         Ok(l) => l,
         Err(_) => String::new(),
     };
-
-    i
+    return i
 }
 
 fn help_me() {
@@ -32,7 +31,7 @@ fn help_me() {
 
 fn quick_roll(){
     let r = roll_me(GRUPS_ROLL);
-    println!("Total: {}", r);
+    println!("Rolled a {}", r);
 }
 
 fn roll_against(i: std::str::SplitWhitespace){
@@ -77,6 +76,10 @@ fn main() {
         match iter.next() {
             Some("q") => break,
             Some("h") => help_me(),
+
+
+
+
             Some("r") => quick_roll(),
             Some("ra") => roll_against(iter),
             _ => continue,
