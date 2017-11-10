@@ -1,4 +1,5 @@
 extern crate d20;
+
 use std::io;
 use std::cmp::Ordering;
 
@@ -13,7 +14,7 @@ fn help_me() {
 
 fn roll_me(s: &str) -> i32 {
     let r = d20::roll_dice(s).unwrap();
-    //println!("Roll: {}", r);
+    println!("Roll: {}", r);
     match r.total {
         17...18 => println!("Crit Fail!"),
         1...2 => println!("Crit Success!"),
@@ -24,7 +25,9 @@ fn roll_me(s: &str) -> i32 {
 
 fn get_input() -> String {
     let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("!!Failed to read line");
+    io::stdin()
+        .read_line(&mut input)
+        .expect("!!Failed to read line");
     String::from(input)
 }
 
