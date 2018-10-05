@@ -1,7 +1,7 @@
 [package]
 name = "gurps"
 version = "0.1.0"
-authors = ["David Aronsohn <WagThatTail@Me.com>"]
+authors = ["Amy Aronsohn <WagThatTail@Me.com>"]
 
 [dependencies]
 d20 = "0.1.0"

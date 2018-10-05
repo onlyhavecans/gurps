@@ -1,9 +1,11 @@
 extern crate d20;
 
-use std::io;
 use std::cmp::Ordering;
+use std::io;
 
 static GRUPS_ROLL: &str = "3d6";
+#[allow(dead_code)]
+static D20_ROLL: &str = "1d20";
 
 fn help_me() {
     println!("h = help");
