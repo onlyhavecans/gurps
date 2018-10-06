@@ -1,8 +1,9 @@
 extern crate rand;
+extern crate rustyline;
 
 use rand::{thread_rng, Rng};
+use rustyline::Editor;
 use std::cmp::Ordering;
-use std::io;
 
 fn help_me() {
     println!("h = help");
@@ -16,14 +17,6 @@ pub fn roll_dice(num: i64, sides: u64) -> i64 {
     (0..num.abs())
         .map(|_| rng.gen_range(1, sides as i64 + 1))
         .sum()
-}
-
-fn get_input() -> String {
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .expect("!!Failed to read line");
-    String::from(input)
 }
 
 fn is_next_number(i: std::str::SplitWhitespace) -> Result<i64, &str> {
@@ -61,20 +54,34 @@ fn roll_against(against: i64) {
 fn main() {
     println!("Welcome to the roller;");
     println!("q to quit, h to help");
-    loop {
-        let input = get_input();
-        let mut iter = input.split_whitespace();
-        match iter.next() {
-            Some("q") => break,
-            Some("h") => help_me(),
-            Some("r") => quick_roll(),
-            Some("ra") => {
-                if let Ok(n) = is_next_number(iter) {
-                    roll_against(n);
-                }
-            }
-            _ => continue,
-        };
+    let mut rl = Editor::<()>::new();
+    if rl.load_history("history.txt").is_err() {
+        println!("No previous history.");
     }
+    loop {
+        let readline = rl.readline(">> ");
+        match readline {
+            Ok(line) => {
+                rl.add_history_entry(line.as_ref());
+                let mut iter = line.split_whitespace();
+                match iter.next() {
+                    Some("q") => break,
+                    Some("h") => help_me(),
+                    Some("r") => quick_roll(),
+                    Some("ra") => {
+                        if let Ok(n) = is_next_number(iter) {
+                            roll_against(n);
+                        }
+                    }
+                    _ => continue,
+                };
+            }
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break;
+            }
+        }
+    }
+    rl.save_history("history.txt").unwrap();
     println!("Later!");
 }
