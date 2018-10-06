@@ -1,11 +1,8 @@
-extern crate d20;
+extern crate rand;
 
+use rand::{thread_rng, Rng};
 use std::cmp::Ordering;
 use std::io;
-
-static GRUPS_ROLL: &str = "3d6";
-#[allow(dead_code)]
-static D20_ROLL: &str = "1d20";
 
 fn help_me() {
     println!("h = help");
@@ -14,15 +11,11 @@ fn help_me() {
     println!("ra # = quick roll");
 }
 
-fn roll_me(s: &str) -> i32 {
-    let r = d20::roll_dice(s).unwrap();
-    println!("Roll: {}", r);
-    match r.total {
-        17...18 => println!("Crit Fail!"),
-        1...2 => println!("Crit Success!"),
-        _ => {}
-    };
-    r.total
+pub fn roll_dice(num: i64, sides: u64) -> i64 {
+    let mut rng = thread_rng();
+    (0..num.abs())
+        .map(|_| rng.gen_range(1, sides as i64 + 1))
+        .sum()
 }
 
 fn get_input() -> String {
@@ -33,10 +26,10 @@ fn get_input() -> String {
     String::from(input)
 }
 
-fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
+fn is_next_number(i: std::str::SplitWhitespace) -> Result<i64, &str> {
     let mut iter = i;
     if let Some(s) = iter.next() {
-        if let Ok(n) = s.parse::<i32>() {
+        if let Ok(n) = s.parse::<i64>() {
             return Ok(n);
         }
     };
@@ -45,16 +38,16 @@ fn is_next_number(i: std::str::SplitWhitespace) -> Result<i32, &str> {
 }
 
 fn quick_roll() {
-    let roll = roll_me(GRUPS_ROLL);
+    let roll = roll_dice(3, 6);
     println!("Rolled a {}", roll);
 }
 
-fn roll_against(against: i32) {
+fn roll_against(against: i64) {
     if against == 0 || against > 18 {
         println!("!! Rolling against {} is an error", against);
         return;
     };
-    let roll: i32 = roll_me(GRUPS_ROLL);
+    let roll: i64 = roll_dice(3, 6);
     match roll.cmp(&against) {
         Ordering::Less | Ordering::Equal => {
             println!("Success! delta {}", against - roll);
