@@ -5,6 +5,8 @@ use rand::{thread_rng, Rng};
 use rustyline::Editor;
 use std::cmp::Ordering;
 
+static PROMPT: &str = ">> ";
+
 fn help_me() {
     println!("h = help");
     println!("q = quit");
@@ -12,7 +14,7 @@ fn help_me() {
     println!("ra # = quick roll");
 }
 
-pub fn roll_dice(num: i64, sides: u64) -> i64 {
+fn roll_dice(num: i64, sides: u64) -> i64 {
     let mut rng = thread_rng();
     (0..num.abs())
         .map(|_| rng.gen_range(1, sides as i64 + 1))
@@ -36,7 +38,7 @@ fn quick_roll() {
 }
 
 fn roll_against(against: i64) {
-    if against == 0 || against > 18 {
+    if against < 1 {
         println!("!! Rolling against {} is an error", against);
         return;
     };
@@ -59,7 +61,7 @@ fn main() {
         println!("No previous history.");
     }
     loop {
-        let readline = rl.readline(">> ");
+        let readline = rl.readline(PROMPT);
         match readline {
             Ok(line) => {
                 rl.add_history_entry(line.as_ref());
