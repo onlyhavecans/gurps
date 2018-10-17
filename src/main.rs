@@ -2,6 +2,7 @@ extern crate rand;
 extern crate rustyline;
 
 use rand::{thread_rng, Rng};
+use rustyline::error::ReadlineError;
 use rustyline::Editor;
 use std::cmp::Ordering;
 
@@ -78,6 +79,12 @@ fn main() {
                     _ => continue,
                 };
             }
+            Err(ReadlineError::Interrupted) => {
+                break;
+            }
+            Err(ReadlineError::Eof) => {
+                break;
+            }
             Err(err) => {
                 println!("Error: {:?}", err);
                 break;
@@ -85,5 +92,5 @@ fn main() {
         }
     }
     rl.save_history("history.txt").unwrap();
-    println!("Later!");
+    println!("Thanks for playing!");
 }
