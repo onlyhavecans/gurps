@@ -47,6 +47,30 @@ fn help_me() {
     println!("ra # = quick roll");
 }
 
+fn print_quick_roll(m: u64, s: u64) {
+    let die = DieRoll::new(m, s);
+    println!("Rolled a {}", die);
+}
+
+fn die_from_term(term: &str) -> Result<DieRoll, String> {
+    if term.to_lowercase().contains('d') {
+        let v: Vec<&str> = term.split('d').collect();
+
+        let multiplier = v[0].parse::<u64>().map_err(|e| e.to_string())?;
+        let sides = v[1].parse::<u64>().map_err(|e| e.to_string())?;
+
+        if multiplier < 1 || sides < 1 {
+            return Err(String::from(
+                "Both multiplier and sides need to be greater than 0",
+            ));
+        }
+
+        Ok(DieRoll::new(multiplier, sides))
+    } else {
+        Err(String::from("Your roll was missing a d"))
+    }
+}
+
 fn is_next_number(i: std::str::SplitWhitespace) -> Result<i64, &str> {
     let mut iter = i;
     if let Some(s) = iter.next() {
@@ -56,11 +80,6 @@ fn is_next_number(i: std::str::SplitWhitespace) -> Result<i64, &str> {
     };
     println!("!! A number was expected next");
     Err("Next was not exist or a number")
-}
-
-fn print_quick_roll(m: u64, s: u64) {
-    let die = DieRoll::new(m, s);
-    println!("Rolled a {}", die);
 }
 
 fn roll_against(against: i64) {
@@ -97,7 +116,16 @@ fn main() {
                     Some("h") => help_me(),
                     Some("g") => print_quick_roll(3, 6),
                     Some("d") => print_quick_roll(1, 20),
-                    Some("r") => println!("Not yet implimented"),
+                    Some("r") => {
+                        if let Some(n) = iter.next() {
+                            match die_from_term(n) {
+                                Ok(d) => println!("You rolled a {}", d),
+                                Err(e) => println!("Error: {}", e),
+                            }
+                        } else {
+                            println!("Specify what you are rolling with #d#")
+                        }
+                    }
                     Some("ra") => {
                         if let Ok(n) = is_next_number(iter) {
                             roll_against(n);
