@@ -1,5 +1,4 @@
 extern crate rand;
-extern crate rustyline;
 
 use rand::{thread_rng, Rng};
 use rustyline::error::ReadlineError;
@@ -24,10 +23,7 @@ impl fmt::Display for DieRoll {
 
 impl DieRoll {
     fn new(multiplier: u64, sides: u64) -> DieRoll {
-        DieRoll {
-            multiplier: multiplier,
-            sides: sides,
-        }
+        DieRoll { multiplier, sides }
     }
 
     fn roll(&self) -> i64 {
@@ -109,7 +105,7 @@ fn main() {
         let readline = rl.readline(PROMPT);
         match readline {
             Ok(line) => {
-                rl.add_history_entry(line.as_ref());
+                rl.add_history_entry(&line);
                 let mut iter = line.split_whitespace();
                 match iter.next() {
                     Some("q") => break,

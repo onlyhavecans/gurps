@@ -2,8 +2,8 @@
 name = "gurps"
 version = "0.2.0"
 authors = ["Amy Aronsohn <WagThatTail@Me.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
-rustyline = "3.0"
+rustyline = "9"
 rand = "0.6"
